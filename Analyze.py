@@ -10,7 +10,6 @@ def runAnalysis(fileNames):
             self.timestamp = timestamp
             self.elapsed_ms = elapsed_ms
 
-
     # def sortUserAgentBucket(arr):
     #     span = int(len(arr) / 1.3)
     #     while span >= 1:
@@ -78,6 +77,13 @@ def runAnalysis(fileNames):
     print("Check complete")
     raportFile.write("Check complete\n")
     raportFile.close()
+
+    f = open("diffs_" + "_".join(fileNames), "w")
+    for i in userAgentDict:
+        for j in range(1, len(userAgentDict[i])):
+            diff = int(userAgentDict[i][j].timestamp) - int(float(userAgentDict[i][j - 1].elapsed_ms)) - int(userAgentDict[i][j - 1].timestamp)
+            f.write(str(diff) + "\n")
+    f.close()
 
     # out = open('out.txt', 'w')
     # for i in userAgentDict:
