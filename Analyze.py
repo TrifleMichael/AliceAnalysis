@@ -11,15 +11,15 @@ def runAnalysis(fileNames):
             self.elapsed_ms = elapsed_ms
 
 
-    def sortUserAgentBucket(arr):
-        span = int(len(arr) / 1.3)
-        while span >= 1:
-            i = 0
-            while i + span < len(arr):
-                if arr[i].timestamp > arr[i + span].timestamp:
-                    arr[i], arr[i + span] = arr[i + span], arr[i]
-                i += 1
-            span = int(span / 1.3)
+    # def sortUserAgentBucket(arr):
+    #     span = int(len(arr) / 1.3)
+    #     while span >= 1:
+    #         i = 0
+    #         while i + span < len(arr):
+    #             if arr[i].timestamp > arr[i + span].timestamp:
+    #                 arr[i], arr[i + span] = arr[i + span], arr[i]
+    #             i += 1
+    #         span = int(span / 1.3)
 
     for name in fileNames:
         f = open(name, 'r')
@@ -41,7 +41,8 @@ def runAnalysis(fileNames):
     print("Reading complete")
 
     for i in userAgentDict:
-        sortUserAgentBucket(userAgentDict[i])
+        # sortUserAgentBucket(userAgentDict[i])
+        userAgentDict[i].sort(key = lambda x: x.timestamp)
 
     raportFile.write("User agent containers sorted\n")
     print("User agent containers sorted")
@@ -49,6 +50,7 @@ def runAnalysis(fileNames):
     zero_diff = 0
     one_diff = 0
     large_diff = 0
+    allDiffs = 0
     for i in userAgentDict:
         for j in range(1, len(userAgentDict[i])):
             if userAgentDict[i][j].timestamp < userAgentDict[i][j - 1].timestamp:
@@ -57,6 +59,7 @@ def runAnalysis(fileNames):
                 exit()
 
             diff = int(userAgentDict[i][j].timestamp) - int(float(userAgentDict[i][j - 1].elapsed_ms)) - int(userAgentDict[i][j - 1].timestamp)
+            allDiffs += 1
 
             if diff == 0:
                 zero_diff += 1
@@ -65,8 +68,10 @@ def runAnalysis(fileNames):
             elif diff < -1:
                 large_diff += 1
 
+    print(allDiffs)
     print(zero_diff, one_diff, large_diff)
     print(zero_diff + one_diff + large_diff)
+    raportFile.write("All diffs (including positive " + str(allDiffs))
     raportFile.write("Zero, one and large diff: " + str(zero_diff) + " " + str(one_diff) + " " + str(large_diff) + "\n")
     raportFile.write("Total diffs " + str(zero_diff + one_diff + large_diff))
 
@@ -81,6 +86,3 @@ def runAnalysis(fileNames):
     # out.close()
     #
     # print("Results saved")
-
-fileNames = ['db1/http_access_log.json-20221120', 'db2/http_access_log.json-20221120']
-runAnalysis(fileNames)
