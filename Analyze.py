@@ -36,7 +36,7 @@ def generateDiffFiles(fileName, prefixes):
     raportFile.write("User agent containers sorted\n")
     print("User agent containers sorted")
 
-    d = open("diffs_" + fileName, "w")
+    d = open("diff_files/diffs_" + fileName, "w")
 
     for i in userAgentDict:
         d.write("!" + i + "\n")

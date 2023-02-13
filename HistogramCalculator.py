@@ -16,7 +16,7 @@ def calculateHistogram(fileName):
                 bins[-1] += 1
     f.close()
 
-    out = open("histogram_data_"+fileName, "w")
+    out = open("histogram_data/histogram_data_"+fileName, "w")
     for value in bins:
         out.write(str(value) + "\n")
     out.close()
