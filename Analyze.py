@@ -4,7 +4,7 @@ def generateDiffFiles(fileName, prefixes):
     userAgentDict = {}
 
     raportFile = open("raport", "a")
-    raportFile.write("Starting a new download for" + fileName)
+    raportFile.write("Starting a new download for " + fileName + "\n")
 
     class Record:
         def __init__(self, timestamp, elapsed_ms):
