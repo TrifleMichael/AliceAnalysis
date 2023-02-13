@@ -18,7 +18,6 @@ def remove(fileName, prefixes):
     for prefix in prefixes:
         os.system("rm " + prefix + fileName)
 
-
 prefixes = ["alicdb1/", "alicdb2/"]
 serverName = "http://alimonitor.cern.ch/download/michal/"
 fileNames = ['http_access_log.json-20221120']
