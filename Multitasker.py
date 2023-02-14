@@ -17,6 +17,7 @@ def download(serverName, fileName, prefixes):
 def remove(fileName, prefixes):
     for prefix in prefixes:
         os.system("rm " + prefix + fileName)
+        os.system("rm " + prefix + fileName + ".bz2")
 
 prefixes = ["alicdb1/", "alicdb2/"]
 serverName = "http://alimonitor.cern.ch/download/michal/"
@@ -54,7 +55,7 @@ fileNames = [
 ]
 
 for name in fileNames:
-    if not os.path.isfile("./diffs_"+name):
+    if not os.path.isfile("diff_files/diffs_"+name):
         download(serverName, name, prefixes)
         generateDiffFiles(name, prefixes)
         remove(name, prefixes)
