@@ -4,9 +4,17 @@ import matplotlib.pyplot as plt
 from collections import defaultdict
 from typing import List
 from copy import deepcopy
-
+from datetime import datetime
 # path = "data/dir1/http_access_log.json-20221103"
 
+def log(information):
+    f = open("LOGS", "a")
+    f.write(str(datetime.now()))
+    f.write(" WA : ")
+    f.write(information)
+    f.write("\n")
+    f.close()
+    print(information)
 
 class Event:
     def __init__(self, timestamp: int, event_type: str):
@@ -116,18 +124,19 @@ def sort_all_agent_records(user_agent_dict):
 
 
 def generateConnectionsGraph(files, outputName, window_size):
+    log("Starting  window analysis for " + str(outputName))
     user_agent_dict = parse_file(files)
-    print("File parsed")
+    log("File parsed")
     sort_all_agent_records(user_agent_dict)
-    print("Containers sorted")
+    log("Containers sorted")
     curr_agent_dict = add_window_length(user_agent_dict, window_size)
-    print("Windows added")
+    log("Windows added")
     merge_records_in_dict(curr_agent_dict)
-    print("Records merged")
+    log("Records merged")
     result_list = analyze_number_of_connections(curr_agent_dict)
-    print("Connections calculated")
+    log("Connections calculated")
     plt.bar(list(range(len(result_list))), result_list)
     # plt.show()
     plt.savefig(outputName)
-    print("Output file saves")
+    log("Output file saves")
 
