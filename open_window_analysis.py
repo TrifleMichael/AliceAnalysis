@@ -44,21 +44,21 @@ def parse_file(files):
     return user_agent_dict
 
 
-def find_minimum_of_dict(dictionary: defaultdict):
+def find_minimum_of_dict(dictionary):
     return min(min(timestamps) for timestamps in dictionary.values())
 
 
-def find_maximum_of_dict(dictionary: defaultdict):
+def find_maximum_of_dict(dictionary):
     return max(max(timestamps) for timestamps in dictionary.values())
 
 
-def merge_records_list(records_list: List[Record]) -> Record:
+def merge_records_list(records_list):
     min_start_timestamp = min(record.start_event.timestamp for record in records_list)
     max_end_timestamp = min(record.end_event.timestamp for record in records_list)
     return Record(min_start_timestamp, max_end_timestamp)
 
 
-def merge_agent_records(user_records: List[Record]) -> List[Record]:
+def merge_agent_records(user_records):
     records_to_merge = []
     result_records = []
     for i in range(len(user_records) - 1):
@@ -74,13 +74,13 @@ def merge_agent_records(user_records: List[Record]) -> List[Record]:
     return result_records
 
 
-def merge_records_in_dict(agent_dict: defaultdict[List[Record]]) -> None:
+def merge_records_in_dict(agent_dict):
     for agent, records in agent_dict.items():
         merged_records = merge_agent_records(records)
         agent_dict[agent] = merged_records
 
 
-def analyze_number_of_connections(agent_dict: defaultdict[List[Record]]) -> List[int]:
+def analyze_number_of_connections(agent_dict):
     all_records: List[Record] = []
     for agent_records in agent_dict.values():
         all_records += agent_records
@@ -102,7 +102,7 @@ def analyze_number_of_connections(agent_dict: defaultdict[List[Record]]) -> List
     return connections_at_time
 
 
-def add_window_length(agent_dict: defaultdict[List[Record]], window_size: int) -> defaultdict[List[Record]]:
+def add_window_length(agent_dict, window_size):
     new_agent_dict = deepcopy(agent_dict)
     for agent, records in new_agent_dict.items():
         for record in records:
@@ -110,7 +110,7 @@ def add_window_length(agent_dict: defaultdict[List[Record]], window_size: int) -
     return new_agent_dict
 
 
-def sort_all_agent_records(user_agent_dict: defaultdict[List[Record]]):
+def sort_all_agent_records(user_agent_dict):
     for user, records in user_agent_dict.items():
         user_agent_dict[user] = sorted(records)
 
