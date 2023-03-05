@@ -60,8 +60,11 @@ fileNames = ['http_access_log.json-20221120']
 #         generateDiffFiles(name, prefixes)
 #         remove(name, prefixes)
 
+window_sizes = [100]
 for name in fileNames:
-    if not os.path.isfile("IMAGE_NAME_PLACEHOLDER!!!!!"):
-        download(serverName, name, prefixes)
-        generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name])
-        # remove(name, prefixes)
+    for size in window_sizes:
+        outputName = str(size) + "_" + name + ".png"
+        if not os.path.isfile(outputName):
+            download(serverName, name, prefixes)
+            generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
+            # remove(name, prefixes)
