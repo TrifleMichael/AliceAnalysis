@@ -26,7 +26,7 @@ class Record:
         return self.start_event < other.start_event
 
 
-def parse_file(files: List[str]) -> defaultdict[List[Record]]:
+def parse_file(files) -> defaultdict[List[Record]]:
     user_agent_dict = defaultdict(list)
     for file in files:
         with open(file) as f:
@@ -115,7 +115,7 @@ def sort_all_agent_records(user_agent_dict: defaultdict[List[Record]]):
         user_agent_dict[user] = sorted(records)
 
 
-def generateConnectionsGraph(files: List[str]):
+def generateConnectionsGraph(files):
     user_agent_dict = parse_file(files)
     sort_all_agent_records(user_agent_dict)
     for window_size in [100]:
