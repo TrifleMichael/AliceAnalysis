@@ -116,9 +116,9 @@ def add_window_length(agent_dict, window_size):
     for agent, records in new_agent_dict.items():
         for record in records:
             record.end_event.timestamp += window_size
-        i += 1
-        if i % 1000 == 0:
+        if i % 1000 == 0 or i < 1000:
             log("Extended " + str(i) + " windows.")
+        i += 1
     return new_agent_dict
 
 
