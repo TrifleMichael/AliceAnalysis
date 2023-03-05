@@ -111,10 +111,14 @@ def analyze_number_of_connections(agent_dict):
 
 
 def add_window_length(agent_dict, window_size):
+    i = 0
     new_agent_dict = deepcopy(agent_dict)
     for agent, records in new_agent_dict.items():
         for record in records:
             record.end_event.timestamp += window_size
+        i += 1
+        if i % 1000 == 0:
+            log("Extended " + str(i) + " windows.")
     return new_agent_dict
 
 
@@ -124,7 +128,7 @@ def sort_all_agent_records(user_agent_dict):
 
 
 def generateConnectionsGraph(files, outputName, window_size):
-    log("Starting  window analysis for " + str(outputName))
+    log("Starting window analysis for " + str(outputName))
     user_agent_dict = parse_file(files)
     log("File parsed")
     sort_all_agent_records(user_agent_dict)
@@ -138,5 +142,5 @@ def generateConnectionsGraph(files, outputName, window_size):
     plt.bar(list(range(len(result_list))), result_list)
     # plt.show()
     plt.savefig(outputName)
-    log("Output file saves")
+    log("Output file saved")
 
