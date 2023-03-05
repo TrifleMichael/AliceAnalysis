@@ -26,7 +26,7 @@ class Record:
         return self.start_event < other.start_event
 
 
-def parse_file(files) -> defaultdict[List[Record]]:
+def parse_file(files):
     user_agent_dict = defaultdict(list)
     for file in files:
         with open(file) as f:
