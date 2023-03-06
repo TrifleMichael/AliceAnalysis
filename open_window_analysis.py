@@ -62,7 +62,7 @@ def find_maximum_of_dict(dictionary):
 
 def merge_records_list(records_list):
     min_start_timestamp = min(record.start_event.timestamp for record in records_list)
-    max_end_timestamp = min(record.end_event.timestamp for record in records_list)
+    max_end_timestamp = max(record.end_event.timestamp for record in records_list)
     return Record(min_start_timestamp, max_end_timestamp)
 
 
@@ -89,10 +89,10 @@ def merge_records_in_dict(agent_dict):
 
 
 def analyze_number_of_connections(agent_dict):
-    all_records: List[Record] = []
+    all_records = []
     for agent_records in agent_dict.values():
         all_records += agent_records
-    all_events: List[Event] = []
+    all_events = []
     for record in all_records:
         all_events.append(record.start_event)
         all_events.append(record.end_event)
@@ -101,7 +101,8 @@ def analyze_number_of_connections(agent_dict):
     curr_timestamp = all_events[0].timestamp
     for event in all_events:
         if event.timestamp != curr_timestamp:
-            connections_at_time.append(connections_at_time[-1])
+            for i in range(event.timestamp - curr_timestamp):
+                connections_at_time.append(connections_at_time[-1])
             curr_timestamp = event.timestamp
         if event.event_type == "start":
             connections_at_time[-1] += 1
@@ -112,7 +113,8 @@ def analyze_number_of_connections(agent_dict):
 
 def add_window_length(agent_dict, window_size):
     i = 0
-    new_agent_dict = deepcopy(agent_dict)
+    # new_agent_dict = deepcopy(agent_dict)
+    new_agent_dict = agent_dict.copy()
     for agent, records in new_agent_dict.items():
         for record in records:
             record.end_event.timestamp += window_size
