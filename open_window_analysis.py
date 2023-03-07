@@ -130,19 +130,25 @@ def sort_all_agent_records(user_agent_dict):
 
 
 def generateConnectionsGraph(files, outputName, window_size):
-    log("Starting window analysis for " + str(outputName))
-    user_agent_dict = parse_file(files)
-    log("File parsed")
-    sort_all_agent_records(user_agent_dict)
-    log("Containers sorted")
-    curr_agent_dict = add_window_length(user_agent_dict, window_size)
-    log("Windows added")
-    merge_records_in_dict(curr_agent_dict)
-    log("Records merged")
-    result_list = analyze_number_of_connections(curr_agent_dict)
-    log("Connections calculated")
-    plt.bar(list(range(len(result_list))), result_list)
-    # plt.show()
-    plt.savefig(outputName)
-    log("Output file saved")
+    try:
+        log("Starting window analysis for " + str(outputName))
+        user_agent_dict = parse_file(files)
+        log("File parsed")
+        sort_all_agent_records(user_agent_dict)
+        log("Containers sorted")
+        curr_agent_dict = add_window_length(user_agent_dict, window_size)
+        log("Windows added")
+        merge_records_in_dict(curr_agent_dict)
+        log("Records merged")
+        result_list = analyze_number_of_connections(curr_agent_dict)
+        log("Connections calculated")
+        plt.bar(list(range(len(result_list))), result_list)
+        # plt.show()
+        plt.savefig(outputName)
+        log("Output file saved")
+    except Exception as ex:
+        log("Terrible error took place: " + ex.__str__())
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(ex).__name__, ex.args)
+        log(message)
 
