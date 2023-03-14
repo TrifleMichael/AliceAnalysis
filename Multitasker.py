@@ -2,7 +2,16 @@ import os
 
 from Analyze import generateDiffFiles
 from open_window_analysis import generateConnectionsGraph
+from datetime import datetime
 
+def log(information):
+    f = open("LOGS", "a")
+    f.write(str(datetime.now()))
+    f.write(" : ")
+    f.write(information)
+    f.write("\n")
+    f.close()
+    print(information)
 
 def download(serverName, fileName, prefixes):
     for prefix in prefixes:
@@ -65,6 +74,8 @@ for name in fileNames:
     for size in window_sizes:
         outputName = str(size) + "_" + name + ".png"
         if not os.path.isfile(outputName):
+            log("Starting download for: "+name)
             download(serverName, name, prefixes)
+            log("Preparing graph for: "+name)
             generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
             # remove(name, prefixes)
