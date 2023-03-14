@@ -79,3 +79,5 @@ for name in fileNames:
             log("Preparing graph for: "+name)
             generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
             # remove(name, prefixes)
+        else:
+            log("Skipping task for "+outputName)
