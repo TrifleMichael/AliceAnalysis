@@ -143,7 +143,7 @@ def sort_all_agent_records(user_agent_dict):
 
 
 def save_results(results, outputName):
-    f = open(outputName + "_results")
+    f = open(outputName + "_results", "w")
     for result in results:
         f.write(result)
         f.write("\n")
