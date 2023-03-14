@@ -71,12 +71,12 @@ try:
     for name in fileNames:
         for size in window_sizes:
             outputName = str(size) + "_" + name + ".png"
-            if not os.path.isfile(outputName):
+            if not os.path.isfile(outputName+"_results"):
                 log("Starting download for: " + name)
                 download(serverName, name, prefixes)
                 log("Preparing graph for: " + name)
                 generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
-                # remove(name, prefixes)
+                remove(name, prefixes)
             else:
                 log("Skipping task for " + outputName)
 
