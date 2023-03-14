@@ -30,11 +30,11 @@ serverName = "http://alimonitor.cern.ch/download/michal/"
 # fileNames = ['http_access_log.json-20221102']
 
 fileNames = [
-    "http_access_log.json-20221116",
-    "http_access_log.json-20221121",
-    "http_access_log.json-20221112",
-    "http_access_log.json-20221101",
-    "http_access_log.json-20221113",
+    # "http_access_log.json-20221116",
+    # "http_access_log.json-20221121",
+    # "http_access_log.json-20221112",
+    # "http_access_log.json-20221101",
+    # "http_access_log.json-20221113",
     "http_access_log.json-20221118",
     "http_access_log.json-20221103",
     "http_access_log.json-20221117",
@@ -71,8 +71,6 @@ try:
     for name in fileNames:
         for size in window_sizes:
             outputName = str(size) + "_" + name + ".png"
-            print("Searching for ", "./output/"+outputName+"_results")
-            exit()
             if not os.path.isfile("./output/"+outputName+"_results"):
                 log("Starting download for: " + name)
                 download(serverName, name, prefixes)
