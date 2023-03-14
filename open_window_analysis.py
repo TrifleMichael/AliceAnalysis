@@ -142,6 +142,23 @@ def sort_all_agent_records(user_agent_dict):
         user_agent_dict[user] = sorted(records)
 
 
+def save_results(results, outputName):
+    f = open(outputName + "_results")
+    for result in results:
+        f.write(result)
+        f.write("\n")
+    f.close()
+
+def compress_results(results, skips_per_step):
+    compressed = []
+    last_max = 0
+    for i, result in enumerate(results):
+        if (i + 1) % skips_per_step == 0:
+            compressed.append(last_max)
+            last_max = 0
+        last_max= max(result, last_max)
+    return compressed
+
 def generateConnectionsGraph(files, outputName, window_size):
     try:
         log("Starting window analysis for " + str(outputName))
@@ -155,7 +172,12 @@ def generateConnectionsGraph(files, outputName, window_size):
         log("Records merged")
         result_list = analyze_number_of_connections(curr_agent_dict)
         log("Connections calculated")
-        plt.bar(list(range(len(result_list))), result_list)
+        save_results(result_list, outputName)
+        log("Results saved")
+        compressed_results = compress_results(result_list, 10000)
+        log("Compressed results")
+        plt.bar(list(range(len(compressed_results))), result_list)
+        log("Plot prepared")
         # plt.show()
         plt.savefig(outputName)
         log("Output file saved")
