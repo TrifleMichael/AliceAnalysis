@@ -156,7 +156,7 @@ def compress_results(results, skips_per_step):
         if (i + 1) % skips_per_step == 0:
             compressed.append(last_max)
             last_max = 0
-        last_max= max(result, last_max)
+        last_max = max(result, last_max)
     return compressed
 
 def generateConnectionsGraph(files, outputName, window_size):
@@ -173,14 +173,14 @@ def generateConnectionsGraph(files, outputName, window_size):
         result_list = analyze_number_of_connections(curr_agent_dict)
         log("Connections calculated")
         save_results(result_list, outputName)
-        log("Results saved")
-        compressed_results = compress_results(result_list, 100)
-        log("Compressed results")
-        plt.bar(list(range(len(compressed_results))), compressed_results)
-        log("Plot prepared")
-        # plt.show()
-        plt.savefig(outputName)
         log("Output file saved")
+        # log("Results saved")
+        # compressed_results = compress_results(result_list, 100)
+        # log("Compressed results")
+        # plt.bar(list(range(len(compressed_results))), compressed_results)
+        # log("Plot prepared")
+        # plt.show()
+        # plt.savefig(outputName)
     except Exception as ex:
         log("Terrible error took place: " + ex.__str__())
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
