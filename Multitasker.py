@@ -66,15 +66,22 @@ fileNames = [
 #         generateDiffFiles(name, prefixes)
 #         remove(name, prefixes)
 
-window_sizes = [100]
-for name in fileNames:
-    for size in window_sizes:
-        outputName = str(size) + "_" + name + ".png"
-        if not os.path.isfile(outputName):
-            log("Starting download for: " + name)
-            download(serverName, name, prefixes)
-            log("Preparing graph for: " + name)
-            generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
-            # remove(name, prefixes)
-        else:
-            log("Skipping task for " + outputName)
+try:
+    window_sizes = [100]
+    for name in fileNames:
+        for size in window_sizes:
+            outputName = str(size) + "_" + name + ".png"
+            if not os.path.isfile(outputName):
+                log("Starting download for: " + name)
+                download(serverName, name, prefixes)
+                log("Preparing graph for: " + name)
+                generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
+                # remove(name, prefixes)
+            else:
+                log("Skipping task for " + outputName)
+
+except Exception as ex:
+    log("Error took place: " + ex.__str__())
+    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+    message = template.format(type(ex).__name__, ex.args)
+    log(message)
