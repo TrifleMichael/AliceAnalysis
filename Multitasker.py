@@ -71,7 +71,9 @@ try:
     for name in fileNames:
         for size in window_sizes:
             outputName = str(size) + "_" + name + ".png"
-            if not os.path.isfile(outputName+"_results"):
+            print("Searching for ", "./output/"+outputName+"_results")
+            exit()
+            if not os.path.isfile("./output/"+outputName+"_results"):
                 log("Starting download for: " + name)
                 download(serverName, name, prefixes)
                 log("Preparing graph for: " + name)
