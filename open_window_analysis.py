@@ -173,7 +173,7 @@ def generateConnectionsGraph(files, outputName, window_size):
         log("Records merged")
         result_list = analyze_number_of_connections(curr_agent_dict)
         log("Connections calculated")
-        save_results(result_list, outputName)
+        save_results(result_list, "./output/"+outputName)  # TODO : ADD PROPER PATH
         log("Output file saved")
         # log("Results saved")
         # compressed_results = compress_results(result_list, 100)

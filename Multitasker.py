@@ -6,21 +6,24 @@ from datetime import datetime
 from open_window_analysis import log
 
 
-
-def download(serverName, fileName, prefixes):
+def download(serverName, fileName, prefixes):  # TODO: Log errors
     for prefix in prefixes:
-        if not os.path.isfile(prefix+fileName):  # If file is not present
+        if not os.path.isfile(prefix + fileName):  # If file is not present
             if not os.path.isfile(prefix + fileName + ".bz2"):  # If archive is not present
-                print("Downloading", prefix+fileName)
+                print("Downloading", prefix + fileName)
                 os.system("wget " + serverName + prefix + fileName + ".bz2")  # Download archive
-                os.system("mv " + fileName + ".bz2 " + prefix+fileName + ".bz2")  # Move the archive to the destination
-            print("Unpacking", prefix+fileName)
-            os.system("bzip2 -cd " + prefix+fileName+".bz2 > "+prefix+fileName)  # Unpack the archive in destination
+                os.system(
+                    "mv " + fileName + ".bz2 " + prefix + fileName + ".bz2")  # Move the archive to the destination
+            print("Unpacking", prefix + fileName)
+            os.system(
+                "bzip2 -cd " + prefix + fileName + ".bz2 > " + prefix + fileName)  # Unpack the archive in destination
+
 
 def remove(fileName, prefixes):
     for prefix in prefixes:
         os.system("rm " + prefix + fileName)
         os.system("rm " + prefix + fileName + ".bz2")
+
 
 prefixes = ["alicdb1/", "alicdb2/"]
 serverName = "http://alimonitor.cern.ch/download/michal/"
@@ -68,10 +71,10 @@ for name in fileNames:
     for size in window_sizes:
         outputName = str(size) + "_" + name + ".png"
         if not os.path.isfile(outputName):
-            log("Starting download for: "+name)
+            log("Starting download for: " + name)
             download(serverName, name, prefixes)
-            log("Preparing graph for: "+name)
+            log("Preparing graph for: " + name)
             generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
             # remove(name, prefixes)
         else:
-            log("Skipping task for "+outputName)
+            log("Skipping task for " + outputName)
