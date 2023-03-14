@@ -17,12 +17,15 @@ def log(information):
     print(information)
 
 class Event:
-    def __init__(self, timestamp: int, event_type: str):
+    def __init__(self, timestamp, event_type):
         self.timestamp = timestamp
         self.event_type = event_type
 
     def __lt__(self, other):
         return self.timestamp < other.timestamp
+
+    def __repr__(self):
+        return f"{self.timestamp}"
 
 
 class Record:
@@ -32,6 +35,9 @@ class Record:
 
     def __lt__(self, other):
         return self.start_event < other.start_event
+
+    def __repr__(self):
+        return f"({self.start_event}, {self.end_event})"
 
 
 def parse_file(files):
@@ -67,6 +73,8 @@ def merge_records_list(records_list):
 
 
 def merge_agent_records(user_records):
+    if len(user_records) == 1:
+        return user_records
     records_to_merge = []
     result_records = []
     for i in range(len(user_records) - 1):
@@ -76,9 +84,18 @@ def merge_agent_records(user_records):
         records_to_merge.append(curr_record)
         # resetujemy liste jezeli jest przerwa miedzy interwalami
         if curr_record.end_event < next_record.start_event:
+            if i > 1 and i == len(user_records) - 2:
+                records_to_merge.append(next_record)
             merged_record = merge_records_list(records_to_merge)
             result_records.append(merged_record)
             records_to_merge = []
+        else:
+            if i == len(user_records) - 2:
+                records_to_merge.append(next_record)
+                merged_record = merge_records_list(records_to_merge)
+                result_records.append(merged_record)
+    if user_records[-1].start_event > result_records[-1].end_event:
+        result_records.append(user_records[-1])
     return result_records
 
 
@@ -96,9 +113,10 @@ def analyze_number_of_connections(agent_dict):
     for record in all_records:
         all_events.append(record.start_event)
         all_events.append(record.end_event)
-
+    all_events.sort()
     connections_at_time = [0]
     curr_timestamp = all_events[0].timestamp
+    log("All events appended")
     for event in all_events:
         if event.timestamp != curr_timestamp:
             for i in range(event.timestamp - curr_timestamp):
@@ -112,15 +130,10 @@ def analyze_number_of_connections(agent_dict):
 
 
 def add_window_length(agent_dict, window_size):
-    i = 0
-    # new_agent_dict = deepcopy(agent_dict)
     new_agent_dict = agent_dict.copy()
     for agent, records in new_agent_dict.items():
         for record in records:
             record.end_event.timestamp += window_size
-        if i % 1000 == 0 or i < 1000:
-            log("Extended " + str(i) + " windows.")
-        i += 1
     return new_agent_dict
 
 
