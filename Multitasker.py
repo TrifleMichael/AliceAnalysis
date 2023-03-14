@@ -3,15 +3,9 @@ import os
 from Analyze import generateDiffFiles
 from open_window_analysis import generateConnectionsGraph
 from datetime import datetime
+from open_window_analysis import log
 
-def log(information):
-    f = open("LOGS", "a")
-    f.write(str(datetime.now()))
-    f.write(" : ")
-    f.write(information)
-    f.write("\n")
-    f.close()
-    print(information)
+
 
 def download(serverName, fileName, prefixes):
     for prefix in prefixes:

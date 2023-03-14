@@ -1,12 +1,21 @@
 import json
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 
 from collections import defaultdict
 from typing import List
 from copy import deepcopy
 # path = "data/dir1/http_access_log.json-20221103"
-from Multitasker import log
 
+def log(information):
+    f = open("LOGS", "a")
+    f.write(str(datetime.now()))
+    f.write(" : ")
+    f.write(information)
+    f.write("\n")
+    f.close()
+    print(information)
 
 class Event:
     def __init__(self, timestamp, event_type):
