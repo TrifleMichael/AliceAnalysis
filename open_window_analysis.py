@@ -176,7 +176,7 @@ def generateConnectionsGraph(files, outputName, window_size):
         log("Results saved")
         compressed_results = compress_results(result_list, 100)
         log("Compressed results")
-        plt.bar(list(range(len(compressed_results))), result_list)
+        plt.bar(list(range(len(compressed_results))), compressed_results)
         log("Plot prepared")
         # plt.show()
         plt.savefig(outputName)
