@@ -56,10 +56,10 @@ try:
         for m in maxs:
             max_from_last_n_connections(m, "./output/" + name, "./concurrent_connections_plots/"+name)
             current += 1
-            log("Done", current, "out of", all)
+            log("Done "+str(current)+" out of "+str(all))
 
 except Exception as e:
     log("Terrible exception occured:")
-    log(e)
+    log(repr(e))
 
 
