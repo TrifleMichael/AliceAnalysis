@@ -33,7 +33,6 @@ def max_from_last_n_connections(n, file_path, output_name, hours_per_ticks=2):
     fig, ax = plt.subplots()
     ticks = [i*line_number//n//24*hours_per_ticks for i in range(24//hours_per_ticks)]
     ax.set_xticks(ticks)
-    # labels = [str(h)+"h" for h in range(24)]
     labels = [str(t*hours_per_ticks)+"h" for t in range(24//hours_per_ticks)]
     ax.set_xticklabels(labels)
     ax.plot(max_vals)
@@ -53,7 +52,7 @@ try:
 
     for name in names:
         for m in maxs:
-            max_from_last_n_connections(m, "./data2/" + name, "./out/"+name)
+            max_from_last_n_connections(m, "./output/" + name, "./concurrent_connections_plots/"+name)
             current += 1
             print("Done", current, "out of", all)
 
