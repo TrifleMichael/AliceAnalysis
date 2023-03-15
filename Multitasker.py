@@ -11,7 +11,7 @@ def download(serverName, fileName, prefixes):  # TODO: Log errors
     for prefix in prefixes:
         if not os.path.isfile(prefix + fileName + ".bz2"):  # If archive is not present
             if not os.path.isfile(prefix + fileName):  # If file is not present
-                log("Downloading" + prefix + fileName)
+                log("Downloading " + prefix + fileName)
                 os.system("wget " + serverName + prefix + fileName + ".bz2")  # Download archive
                 os.system(
                     "mv " + fileName + ".bz2 " + prefix + fileName + ".bz2")  # Move the archive to the destination
