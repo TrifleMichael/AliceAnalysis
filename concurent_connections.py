@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import os
 
+from open_window_analysis import log
+
 
 def concurrentConnections(file_path):
     f = open(file_path, "r")
@@ -54,10 +56,10 @@ try:
         for m in maxs:
             max_from_last_n_connections(m, "./output/" + name, "./concurrent_connections_plots/"+name)
             current += 1
-            print("Done", current, "out of", all)
+            log("Done", current, "out of", all)
 
 except Exception as e:
-    print("Terrible exception occured:")
-    print(e)
+    log("Terrible exception occured:")
+    log(e)
 
 
