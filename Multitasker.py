@@ -71,29 +71,32 @@ def connection_time_analysis(fileNames):
 #     log(message)
 #     print(traceback.format_exc())
 
-def download_fix():
-    name1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
-    name2 = "http://alimonitor.cern.ch/download/michal/alicdb2/http_access_log-20230314.bz2"
-
-    def download_single(name):
-        log("Downloading " + name)
-        os.system("wget " + name)  # Download archive
-        log("Unpacking " + name)
-        os.system("bzip2 -cd " + name + " > " + name.replace(".bz2", ""))  # Unpack the archive in destination
-        log("Unpacked " + name.replace(".bz2", ""))
-
-    download_single(name1)
-    download_single(name2)
+# def download_fix():
+#     path1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
+#     name1 =
+#     path2 = "http://alimonitor.cern.ch/download/michal/alicdb2/http_access_log-20230314.bz2"
+#     name2 =
+#
+#     def download_single(download_path, name):
+#         log("Downloading " + download_path)
+#         os.system("wget " + download_path)  # Download archive
+#         os.system("mv " + name + "")
+#         log("Unpacking " + name)
+#         os.system("bzip2 -cd " + name + " > " + name.replace(".bz2", ""))  # Unpack the archive in destination
+#         log("Unpacked " + name.replace(".bz2", ""))
+#
+#     download_single(name1)
+#     download_single(name2)
 
 try:
     inputName = "http_access_log.json-20230314"
     outputName = "double_check_test_"+inputName
-    if not os.path.isfile("./double_check_output/" + outputName):
-        download_fix()
-        log("Starting double checker for: " + inputName)
-        double_check(["alicdb1/"+inputName, "alicdb2"+inputName.replace(".json", "")], outputName)
-    else:
-        log("Skipping task for " + outputName)
+    # if not os.path.isfile("./double_check_output/" + outputName):
+        # download_fix()
+        # log("Starting double checker for: " + inputName)
+    double_check(["alicdb1/"+inputName, "alicdb2/"+inputName.replace(".json", "")], outputName)
+    # else:
+    #     log("Skipping task for " + outputName)
 
 except Exception as ex:
     log("Error took place: " + ex.__str__())
