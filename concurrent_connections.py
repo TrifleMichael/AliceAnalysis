@@ -55,7 +55,7 @@ all = len(names) * len(maxs)
 
 for name in names:
     for m in maxs:
-        max_from_last_n_connections(m, "./output/" + name, output_path+name)
+        max_from_last_n_connections(m, "./concurrent_connections_plots/" + name, output_path+name)
         current += 1
         log("Done "+str(current)+" out of "+str(all))
 
