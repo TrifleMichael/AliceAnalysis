@@ -89,12 +89,12 @@ def connection_time_analysis(fileNames):
 #     download_single(name2)
 
 try:
-    inputName = "http_access_log.json-20230314"
-    outputName = "double_check_test_"+inputName
+    inputName = "http_access_log.json-20221101"
+    outputName = "20221101_double_checked"
     # if not os.path.isfile("./double_check_output/" + outputName):
         # download_fix()
         # log("Starting double checker for: " + inputName)
-    double_check(["alicdb1/"+inputName, "alicdb2/"+inputName.replace(".json", "")], outputName)
+    double_check(["alicdb1/"+inputName, "alicdb2/"+inputName], outputName)
     # else:
     #     log("Skipping task for " + outputName)
 
