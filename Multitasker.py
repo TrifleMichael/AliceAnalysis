@@ -32,13 +32,14 @@ def remove(fileName, prefixes):
 
 
 prefixes = ["alicdb1/", "alicdb2/"]
-serverName = "http://alimonitor.cern.ch/download/michal/"
+serverName = "http://alimonitor.cern.ch/download/michal/old/"
+fileNames = ['http_access_log.json-20221101']
 
-fileNames = [
+# fileNames = [
     # "http_access_log.json-20230312",
     # "http_access_log.json-20230313",
-    "http_access_log.json-20230314"
-]
+#     "http_access_log.json-20230314"
+# ]
 
 
 
@@ -50,26 +51,26 @@ def connection_time_analysis(fileNames):
             remove(name, prefixes)
 
 
-# try:
-#     window_sizes = [100]
-#     for name in fileNames:
-#         for size in window_sizes:
-#             outputName = str(size) + "_" + name + ".png"
-#             if not os.path.isfile("./output/" + outputName + "_results"):
-#                 log("Considering download for: " + name)
-#                 download(serverName, name, prefixes)
-#                 log("Preparing graph for: " + name)
-#                 generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
-#                 remove(name, prefixes)
-#             else:
-#                 log("Skipping task for " + outputName)
-#
-# except Exception as ex:
-#     log("Error took place: " + ex.__str__())
-#     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-#     message = template.format(type(ex).__name__, ex.args)
-#     log(message)
-#     print(traceback.format_exc())
+try:
+    window_sizes = [0]
+    for name in fileNames:
+        for size in window_sizes:
+            outputName = str(size) + "_" + name + ".png"
+            if not os.path.isfile("./output/" + outputName + "_results"):
+                log("Considering download for: " + name)
+                download(serverName, name, prefixes)
+                log("Preparing graph for: " + name)
+                generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
+                remove(name, prefixes)
+            else:
+                log("Skipping task for " + outputName)
+
+except Exception as ex:
+    log("Error took place: " + ex.__str__())
+    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+    message = template.format(type(ex).__name__, ex.args)
+    log(message)
+    print(traceback.format_exc())
 
 # def download_fix():
 #     path1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
@@ -88,19 +89,19 @@ def connection_time_analysis(fileNames):
 #     download_single(name1)
 #     download_single(name2)
 
-try:
-    inputName = "http_access_log.json-20221101"
-    outputName = "20221101_double_checked"
-    # if not os.path.isfile("./double_check_output/" + outputName):
-        # download_fix()
-        # log("Starting double checker for: " + inputName)
-    double_check(["alicdb1/"+inputName, "alicdb2/"+inputName], outputName)
-    # else:
-    #     log("Skipping task for " + outputName)
-
-except Exception as ex:
-    log("Error took place: " + ex.__str__())
-    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-    message = template.format(type(ex).__name__, ex.args)
-    log(message)
-    print(traceback.format_exc())
+# try:
+#     inputName = "http_access_log.json-20221101"
+#     outputName = "20221101_double_checked"
+#     # if not os.path.isfile("./double_check_output/" + outputName):
+#         # download_fix()
+#         # log("Starting double checker for: " + inputName)
+#     double_check(["alicdb1/"+inputName, "alicdb2/"+inputName], outputName)
+#     # else:
+#     #     log("Skipping task for " + outputName)
+#
+# except Exception as ex:
+#     log("Error took place: " + ex.__str__())
+#     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+#     message = template.format(type(ex).__name__, ex.args)
+#     log(message)
+#     print(traceback.format_exc())
