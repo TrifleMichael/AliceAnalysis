@@ -16,7 +16,7 @@ def parse_files(files):
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
-                if i % 100000 == 0:
+                if i % 1000000 == 0:
                     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:

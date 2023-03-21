@@ -8,7 +8,7 @@ from datetime import datetime
 from open_window_analysis import log
 
 
-def download(serverName, fileName, prefixes):  # TODO: Log errors
+def download(serverName, fileName, prefixes):
     for prefix in prefixes:
         if not os.path.isfile(prefix + fileName + ".bz2"):  # If archive is not present
             if not os.path.isfile(prefix + fileName):  # If file is not present
@@ -71,19 +71,29 @@ def connection_time_analysis(fileNames):
 #     log(message)
 #     print(traceback.format_exc())
 
+def download_fix():
+    name1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
+    name2 = "http://alimonitor.cern.ch/download/michal/alicdb2/http_access_log-20230314.bz2"
+
+    def download_single(name):
+        log("Downloading " + name)
+        os.system("wget " + name)  # Download archive
+        log("Unpacking " + name)
+        os.system("bzip2 -cd " + name + " > " + name.replace(".bz2", ""))  # Unpack the archive in destination
+        log("Unpacked " + name.replace(".bz2", ""))
+
+    download_single(name1)
+    download_single(name2)
+
 try:
-    for name in fileNames:
-        outputName = "double_check_test_"+name
-        if not os.path.isfile("./double_check_output/" + outputName):
-            log("Considering download for: " + name)
-            name1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
-            name2 = "http://alimonitor.cern.ch/download/michal/alicdb2/http_access_log-20230314.bz2"
-            download(serverName, name, prefixes)
-            log("Starting double checker for: " + name)
-            double_check([name1, name2], outputName)
-            # remove(name, prefixes)
-        else:
-            log("Skipping task for " + outputName)
+    inputName = "http_access_log.json-20230314"
+    outputName = "double_check_test_"+inputName
+    if not os.path.isfile("./double_check_output/" + outputName):
+        download_fix()
+        log("Starting double checker for: " + inputName)
+        double_check(["alicdb1/"+inputName, "alicdb2"+inputName.replace(".json", "")], outputName)
+    else:
+        log("Skipping task for " + outputName)
 
 except Exception as ex:
     log("Error took place: " + ex.__str__())
