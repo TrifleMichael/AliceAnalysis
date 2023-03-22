@@ -28,7 +28,7 @@ def construct_start_dict(files):
                 #     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
-                    useragent = json_line['useragent']
+                    useragent = json_line['userAgent']
                     timestamp = int(json_line['timestamp'])
 
                     if useragent not in start_dict:
@@ -47,7 +47,7 @@ def construct_concurrent_dict(files, start_dict, keep_alive):
                 #     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
-                    useragent = json_line['useragent']
+                    useragent = json_line['userAgent']
                     timestamp = int(json_line['timestamp'])
                     elapsed_ms = int(json_line['elapsed_ms'])
                     end_timestamp = timestamp + elapsed_ms
