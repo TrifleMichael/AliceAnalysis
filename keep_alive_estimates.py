@@ -43,8 +43,8 @@ def construct_concurrent_dict(files, start_dict, keep_alive):
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
-                if i % 1000000 == 0:
-                    log("Parsing progress in double_checker: " + str(i))
+                # if i % 1000000 == 0:
+                #     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
                     useragent = json_line['useragent']
@@ -53,11 +53,11 @@ def construct_concurrent_dict(files, start_dict, keep_alive):
                     end_timestamp = timestamp + elapsed_ms
 
                     upper_bound = min(
-                        end_timestamp,
-                        timestamp_between(timestamp, end_timestamp+keep_alive, useragent, start_dict)
+                        end_timestamp + keep_alive,
+                        timestamp_between(end_timestamp, end_timestamp + keep_alive, useragent, start_dict)
                     )
 
-                    if upper_bound != end_timestamp:
+                    if upper_bound != end_timestamp+keep_alive:
                         parallelised += 1
 
                     for stamp in range(timestamp, upper_bound+1):
