@@ -11,21 +11,44 @@ def log(information):
     f.close()
     print(information)
 
-def timestamp_between(start, end, useragent, start_dict):
-    lowest_inbounds = float('inf')
-    for timestamp in start_dict[useragent]:
-        if start < timestamp <= end:
-            lowest_inbounds = min(lowest_inbounds, timestamp)
-    return lowest_inbounds
+# Returns index of searched value, or the left closest index to that value
+def binary_search_closest(list, searched_value):
+    if searched_value < list[0] or list[-1] < searched_value:
+        return None # Should not happen
+    ind = len(list) // 2
+    l = 0
+    r = len(list) - 1
+    while l != r:
+        if list[ind] < searched_value:
+            l = ind
+        elif searched_value < list[ind]:
+            r = ind
+        elif searched_value == list[ind]:
+            return ind
+        # elif ind+1 < len(list) and list[ind] < searched_value < list[ind+1]:
+        #     return ind
+        ind = (r - l) // 2
+    return ind
 
+# Returns the next timestamp after start, that belongs to useragent
+def next_useragent_timestamp(start, useragent, start_dict):
+
+    # Find the start index
+    ind = binary_search_closest(start_dict[useragent], start)
+    if ind is None:
+        log("Terrible error in timestamp_between")
+
+    if ind+1 < len(start_dict[useragent]):
+        # If next value exists then return it
+        return start_dict[useragent][ind+1]
+    else:
+        return float('inf')
 
 def construct_start_dict(files):
     start_dict = {}  # Key - useragent, value - list of start timestamps for that useragent
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
-                # if i % 1000000 == 0:
-                #     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
                     useragent = json_line['userAgent']
@@ -34,6 +57,10 @@ def construct_start_dict(files):
                     if useragent not in start_dict:
                         start_dict[useragent] = []
                     start_dict[useragent].append(timestamp)
+
+    for useragent in start_dict:
+        start_dict[useragent] = sorted(start_dict[useragent])
+
     return start_dict
 
 def construct_concurrent_dict(files, start_dict, keep_alive):
@@ -43,8 +70,6 @@ def construct_concurrent_dict(files, start_dict, keep_alive):
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
-                # if i % 1000000 == 0:
-                #     log("Parsing progress in double_checker: " + str(i))
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
                     useragent = json_line['userAgent']
@@ -54,7 +79,7 @@ def construct_concurrent_dict(files, start_dict, keep_alive):
 
                     upper_bound = min(
                         end_timestamp + keep_alive,
-                        timestamp_between(end_timestamp, end_timestamp + keep_alive, useragent, start_dict)
+                        next_useragent_timestamp(end_timestamp, useragent, start_dict)
                     )
 
                     if upper_bound != end_timestamp+keep_alive:
