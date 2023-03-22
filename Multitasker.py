@@ -2,7 +2,7 @@ import os
 import traceback
 
 from Analyze import generateDiffFiles
-from double_checker import double_check
+from keep_alive_estimates import keep_alive_estimates
 from open_window_analysis import generateConnectionsGraph
 from datetime import datetime
 from open_window_analysis import log
@@ -22,7 +22,7 @@ def download(serverName, fileName, prefixes):
             os.system(
                 "bzip2 -cd " + prefix + fileName + ".bz2 > " + prefix + fileName)  # Unpack the archive in destination
         else:
-            log("Skipping unpacking for ")
+            log("Skipping unpacking for "+prefix+fileName)
 
 
 def remove(fileName, prefixes):
@@ -32,14 +32,14 @@ def remove(fileName, prefixes):
 
 
 prefixes = ["alicdb1/", "alicdb2/"]
-serverName = "http://alimonitor.cern.ch/download/michal/old/"
-fileNames = ['http_access_log.json-20221101']
+serverName = "http://alimonitor.cern.ch/download/michal/"
+# fileNames = ['http_access_log.json-20221101']
 
-# fileNames = [
-    # "http_access_log.json-20230312",
-    # "http_access_log.json-20230313",
-#     "http_access_log.json-20230314"
-# ]
+fileNames = [
+    "http_access_log.json-20230312",
+    "http_access_log.json-20230313",
+    "http_access_log.json-20230314"
+]
 
 
 
@@ -51,53 +51,19 @@ def connection_time_analysis(fileNames):
             remove(name, prefixes)
 
 
-try:
-    window_sizes = [0]
-    for name in fileNames:
-        for size in window_sizes:
-            outputName = str(size) + "_" + name + ".png"
-            if not os.path.isfile("./output/" + outputName + "_results"):
-                log("Considering download for: " + name)
-                download(serverName, name, prefixes)
-                log("Preparing graph for: " + name)
-                generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
-                remove(name, prefixes)
-            else:
-                log("Skipping task for " + outputName)
-
-except Exception as ex:
-    log("Error took place: " + ex.__str__())
-    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-    message = template.format(type(ex).__name__, ex.args)
-    log(message)
-    print(traceback.format_exc())
-
-# def download_fix():
-#     path1 = "http://alimonitor.cern.ch/download/michal/alicdb1/http_access_log.json-20230314.bz2"
-#     name1 =
-#     path2 = "http://alimonitor.cern.ch/download/michal/alicdb2/http_access_log-20230314.bz2"
-#     name2 =
-#
-#     def download_single(download_path, name):
-#         log("Downloading " + download_path)
-#         os.system("wget " + download_path)  # Download archive
-#         os.system("mv " + name + "")
-#         log("Unpacking " + name)
-#         os.system("bzip2 -cd " + name + " > " + name.replace(".bz2", ""))  # Unpack the archive in destination
-#         log("Unpacked " + name.replace(".bz2", ""))
-#
-#     download_single(name1)
-#     download_single(name2)
-
 # try:
-#     inputName = "http_access_log.json-20221101"
-#     outputName = "20221101_double_checked"
-#     # if not os.path.isfile("./double_check_output/" + outputName):
-#         # download_fix()
-#         # log("Starting double checker for: " + inputName)
-#     double_check(["alicdb1/"+inputName, "alicdb2/"+inputName], outputName)
-#     # else:
-#     #     log("Skipping task for " + outputName)
+#     window_sizes = [0]
+#     for name in fileNames:
+#         for size in window_sizes:
+#             outputName = str(size) + "_" + name + ".png"
+#             if not os.path.isfile("./output/" + outputName + "_results"):
+#                 log("Considering download for: " + name)
+#                 download(serverName, name, prefixes)
+#                 log("Preparing graph for: " + name)
+#                 generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
+#                 remove(name, prefixes)
+#             else:
+#                 log("Skipping task for " + outputName)
 #
 # except Exception as ex:
 #     log("Error took place: " + ex.__str__())
@@ -105,3 +71,24 @@ except Exception as ex:
 #     message = template.format(type(ex).__name__, ex.args)
 #     log(message)
 #     print(traceback.format_exc())
+
+
+try:
+    keep_alive_times = [0]
+    for name in fileNames:
+        for keep_alive in keep_alive_times:
+            output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
+            if not os.path.isfile(output_path):
+                download(serverName, name, prefixes)
+                log("Starting keep alive estimate calculation: " + name)
+                keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+                remove(name, prefixes)
+            else:
+                log("Skipping task for " + output_path)
+
+except Exception as ex:
+    log("Error took place: " + ex.__str__())
+    template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+    message = template.format(type(ex).__name__, ex.args)
+    log(message)
+    print(traceback.format_exc())
