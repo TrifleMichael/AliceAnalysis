@@ -11,10 +11,9 @@ def log(information):
     f.close()
     print(information)
 
-# Returns index of searched value, or the left closest index to that value
-def binary_search_closest(list, searched_value):
+def binary_search(list, searched_value):
     if searched_value < list[0] or list[-1] < searched_value:
-        return None # Should not happen
+        return None  # Should not happen
     ind = len(list) // 2
     l = 0
     r = len(list) - 1
@@ -34,7 +33,7 @@ def binary_search_closest(list, searched_value):
 def next_useragent_timestamp(start, useragent, start_dict):
 
     # Find the start index
-    ind = binary_search_closest(start_dict[useragent], start)
+    ind = binary_search(start_dict[useragent], start)
     if ind is None:
         log("Terrible error in timestamp_between")
 
