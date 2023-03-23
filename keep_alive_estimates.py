@@ -53,6 +53,8 @@ def construct_end_nextstart_dict(records):
         # Try to find last end
         last_end = get_last_end(useragent, timestamp, end_dict)
         if last_end is not None:
+            if useragent not in end_nextstart_dict:
+                end_nextstart_dict[useragent] = {}
             end_nextstart_dict[useragent][last_end] = timestamp
 
     return end_nextstart_dict
