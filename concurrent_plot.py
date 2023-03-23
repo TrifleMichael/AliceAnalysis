@@ -6,6 +6,7 @@ output_path = "./concurrent_connections_plots/"
 
 filenames = os.listdir(input_path)
 for filename in filenames:
+    print("Starting plot generation for "+filename)
     f = open(input_path+filename, "r")
     X = []
     Y = []
@@ -36,4 +37,5 @@ for filename in filenames:
 
     print("Creating plot")
     plt.plot(compressed_X, compressed_Y)
-    plt.savefig(output_path+"_max_"+str(compress_last)+".png")
+    plt.savefig(output_path+filename+"_max_"+str(compress_last)+".png")
+    print("Plot created")
