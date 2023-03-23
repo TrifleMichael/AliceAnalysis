@@ -46,7 +46,7 @@ def max_from_last_n_connections(n, file_path, output_path, hours_per_ticks=2):
 # maxs = [10**i for i in range(4, 7)]
 # names = ["20221101", "20221112", "20221116", "20221121"]
 # try:
-maxs = [720000]
+maxs = [10**5]
 output_path = "./concurrent_connections_plots/"
 input_path = "./keep_alive_estimates/"
 names = os.listdir(input_path)

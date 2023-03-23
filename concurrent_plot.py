@@ -11,14 +11,15 @@ for filename in filenames:
     X = []
     Y = []
     for line in f:
-        val = int(line[:-1].split(":")[1])
         ind = int(line[:-1].split(":")[0])
+        val = int(line[:-1].split(":")[1])
         X.append(ind)
         Y.append(val)
     f.close()
     print("File loaded")
 
-    compress_last = 720000
+    # compress_last = 720000
+    compress_last = 10**5
     compression_counter = 0
     last_uncompressed = []
 
@@ -31,8 +32,8 @@ for filename in filenames:
         if compression_counter == compress_last:
             compressed_X.append(i)
             compressed_Y.append(max(last_uncompressed))
-            compression_counter = 0
             last_uncompressed = []
+            compression_counter = 0
         compression_counter += 1
 
     print("Creating plot")
