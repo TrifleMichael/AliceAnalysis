@@ -14,7 +14,7 @@ def concurrentConnections(file_path):
     # plt.show()
     plt.savefig("plot")
 
-def max_from_last_n_connections(n, file_path, output_name, hours_per_ticks=2):
+def max_from_last_n_connections(n, file_path, output_path, hours_per_ticks=2):
     max_vals = []
     last_vals = []
     line_number = 0
@@ -38,24 +38,25 @@ def max_from_last_n_connections(n, file_path, output_name, hours_per_ticks=2):
     labels = [str(t*hours_per_ticks)+"h" for t in range(24//hours_per_ticks)]
     ax.set_xticklabels(labels)
     ax.plot(max_vals)
-    plt.savefig(output_name+"_max_"+str(n)+".png")
-    print("Done " + output_name+"_max_"+str(n)+".png")
+    plt.savefig(output_path+"_max_"+str(n)+".png")
+    print("Done " + output_path+"_max_"+str(n)+".png")
 
 
 # concurrentConnections("100_20221120")
 # maxs = [10**i for i in range(4, 7)]
 # names = ["20221101", "20221112", "20221116", "20221121"]
 # try:
-maxs = [10**5]
+maxs = [720000]
 output_path = "./concurrent_connections_plots/"
-names = os.listdir(output_path)
+input_path = "./keep_alive_estimates/"
+names = os.listdir(input_path)
 
 current = 0
 all = len(names) * len(maxs)
 
 for name in names:
     for m in maxs:
-        max_from_last_n_connections(m, "./concurrent_connections_plots/" + name, output_path+name)
+        max_from_last_n_connections(m, input_path + name, output_path+name)
         current += 1
         log("Done "+str(current)+" out of "+str(all))
 
