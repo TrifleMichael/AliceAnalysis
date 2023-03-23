@@ -21,7 +21,7 @@ def parse_into_records(files):
 
                     record = {'useragent': json_line['userAgent'],
                               'timestamp': int(json_line['timestamp']),
-                              'elapsed': int(json_line['elapsed_ms'])}
+                              'elapsed_ms': int(json_line['elapsed_ms'])}
 
                     records.append(record)
     return records
