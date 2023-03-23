@@ -65,7 +65,7 @@ def construct_last_call_dict(files):
                     last_call_dict[useragent][timestamp] = float('inf')
 
                     # if old present
-                    if useragent in previous_from_user:
+                    if useragent in last_from_user:
                         # get old
                         previous_from_user = last_from_user[useragent]
                         # old -> new  map
