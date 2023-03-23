@@ -82,7 +82,7 @@ try:
                 download(serverName, name, prefixes)
                 log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
                 keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
-                remove(name, prefixes)
+                # remove(name, prefixes)
             else:
                 log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
 

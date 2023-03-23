@@ -57,7 +57,6 @@ def construct_end_nextstart_dict(records):
 
     return end_nextstart_dict
 
-# def construct_concurrent_dict(files, start_dict, keep_alive):
 def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
     concurrent_dict = {}  # Key - timestamp, value - number of concurrent calls
 
@@ -99,3 +98,4 @@ def keep_alive_estimates(file_paths, output_name, keep_alive):
     log("Concurrent dict generated for " + str(file_paths))
     save_result(concurrent_dict, output_name)
     log("Results saved for " + str(file_paths))
+    # TODO: Fill concurrent_dict with zeros during times of no connections
