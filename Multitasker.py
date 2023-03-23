@@ -32,14 +32,17 @@ def remove(fileName, prefixes):
 
 
 prefixes = ["alicdb1/", "alicdb2/"]
-serverName = "http://alimonitor.cern.ch/download/michal/old/"
-fileNames = ['http_access_log.json-20221101']
+serverName = "http://alimonitor.cern.ch/download/michal/"
+# fileNames = ['http_access_log.json-20221101']
 
-# fileNames = [
-    # "http_access_log.json-20230312",
-    # "http_access_log.json-20230313",
-#     "http_access_log.json-20230314"
-# ]
+fileNames = [
+    "http_access_log.json-20230312",
+    "http_access_log.json-20230313",
+    "http_access_log.json-20230314",
+    "http_access_log.json-20230319",
+    "http_access_log.json-20230320",
+    "http_access_log.json-20230321"
+]
 
 
 
@@ -74,7 +77,7 @@ def connection_time_analysis(fileNames):
 
 
 try:
-    keep_alive_times = [0, 10]
+    keep_alive_times = [0, 100]
     for name in fileNames:
         for keep_alive in keep_alive_times:
             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
