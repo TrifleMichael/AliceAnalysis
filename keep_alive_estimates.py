@@ -11,124 +11,75 @@ def log(information):
     f.close()
     print(information)
 
-# def binary_search(list, searched_value):
-#     if searched_value < list[0] or list[-1] < searched_value:
-#         return None  # Should not happen
-#     ind = len(list) // 2
-#     l = 0
-#     r = len(list) - 1
-#     while l != r:
-#         if list[ind] < searched_value:
-#             l = ind
-#         elif searched_value < list[ind]:
-#             r = ind
-#         elif searched_value == list[ind]:
-#             return ind
-#         # elif ind+1 < len(list) and list[ind] < searched_value < list[ind+1]:
-#         #     return ind
-#         ind = (r - l) // 2
-#     return ind
-
-# Returns the next timestamp after start, that belongs to useragent
-# def next_useragent_timestamp(start, useragent, start_dict):
-#
-#     # Find the start index
-#     ind = binary_search(start_dict[useragent], start)
-#     if ind is None:
-#         log("Terrible error in timestamp_between")
-#
-#     if ind+1 < len(start_dict[useragent]):
-#         # If next value exists then return it
-#         return start_dict[useragent][ind+1]
-#     else:
-#         return float('inf')
-
-# TODO: Check if entries are chronological. If so, then next_useragent_timestamp can avoid sorting
-#       by using a map of [useragent*timestamp]-[next_timestamp] for finding the next timestamp.
-#       The map can be created in construct_start_dict.
-#  ^ THEY SEEM TO BE
-def construct_last_call_dict(files):
-    last_from_user = {}  # Key - useragent, value - their last timestamp
-    last_call_dict = {}  # Key - useragent, value - dictionary with (key - timestamps, value - next timestamp from that user)
+def parse_into_records(files):
+    records = []
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
-                    useragent = json_line['userAgent']
-                    timestamp = int(json_line['timestamp'])
 
-                    if useragent not in last_call_dict:
-                        last_call_dict[useragent] = {}  # Key - timestamps, value - last timestamp from that user
+                    record = {'useragent': json_line['userAgent'],
+                              'timestamp': int(json_line['timestamp']),
+                              'elapsed': int(json_line['elapsed_ms'])}
 
-                    # Set next call as infinity. This won't be changed only for the last call from each user.
-                    last_call_dict[useragent][timestamp] = float('inf')
+                    records.append(record)
+    return records
 
-                    # if old present
-                    if useragent in last_from_user:
-                        # get old
-                        previous_from_user = last_from_user[useragent]
-                        # old -> new  map
-                        last_call_dict[useragent][previous_from_user] = timestamp
-                        # double check if entries are chronologically
-                        if previous_from_user == timestamp:
-                            log("Identical timestamps from one user")
-                        if previous_from_user > timestamp:
-                            log("Non chronological timestamps found")
+def sort_records(records):
+    return sorted(records, key=lambda record: record['timestamp'])
 
-                    # update old
-                    last_from_user[useragent] = timestamp
-    return last_call_dict
+# Returns last end timestamp from that user that happened before timestamp.
+def get_last_end(useragent, timestamp, end_dict):
+    for i in range(len(end_dict[useragent])-1, -1, -1):
+        if end_dict[useragent][i] < timestamp:
+            return end_dict[useragent].pop(i)
+    return None
 
 
-# def construct_start_dict(files):
-#     start_dict = {}  # Key - useragent, value - list of start timestamps for that useragent
-#     for file in files:
-#         with open(file) as f:
-#             for i, line in enumerate(f):
-#                 json_line = json.loads(line)
-#                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
-#                     useragent = json_line['userAgent']
-#                     timestamp = int(json_line['timestamp'])
-#
-#                     if useragent not in start_dict:
-#                         start_dict[useragent] = []
-#                     start_dict[useragent].append(timestamp)
-#
-#     for useragent in start_dict:
-#         start_dict[useragent] = sorted(start_dict[useragent])
-#
-#     return start_dict
+def construct_end_nextstart_dict(records):
+    end_nextstart_dict = {}  # key - user, value - dictionary of (key - end timestamp, value - next start)
+    end_dict = {}  # key - user, value - list of ends of their connections (sorted by start time of those connections)
+    for record in records:
+
+        # Add record data to end_dict
+        useragent = record['useragent']
+        timestamp = record['timestamp']
+        end_timestamp = record['timestamp'] + record['elapsed_ms']
+        if useragent not in end_dict:
+            end_dict[useragent] = []
+        end_dict[useragent].append(end_timestamp)
+
+        # Try to find last end
+        last_end = get_last_end(useragent, timestamp, end_dict)
+        if last_end is not None:
+            end_nextstart_dict[useragent][last_end] = timestamp
+
+    return end_nextstart_dict
 
 # def construct_concurrent_dict(files, start_dict, keep_alive):
-def construct_concurrent_dict(files, last_call_dict, keep_alive):
-    # parallelised = 0
-
+def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
     concurrent_dict = {}  # Key - timestamp, value - number of concurrent calls
-    for file in files:
-        with open(file) as f:
-            for i, line in enumerate(f):
-                json_line = json.loads(line)
-                if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
-                    useragent = json_line['userAgent']
-                    timestamp = int(json_line['timestamp'])
-                    elapsed_ms = int(json_line['elapsed_ms'])
-                    end_timestamp = timestamp + elapsed_ms
 
-                    upper_bound = min(
-                        end_timestamp + keep_alive,
-                        # next_useragent_timestamp(end_timestamp, useragent, start_dict)
-                        last_call_dict[useragent][timestamp]
-                    )
+    for record in records:
+        timestamp = record['timestamp']
+        useragent = record['useragent']
+        end_timestamp = record['timestamp'] + record['elapsed_ms']
 
-                    # if upper_bound != end_timestamp+keep_alive:
-                    #     parallelised += 1
+        if end_timestamp in end_nextstart_dict[useragent]:
+            next_start = end_nextstart_dict[useragent][end_timestamp]
+        else:
+            next_start = float('inf')
 
-                    for stamp in range(timestamp, upper_bound+1):
-                        if stamp not in concurrent_dict:
-                            concurrent_dict[stamp] = 0
-                        concurrent_dict[stamp] += 1
-    # log("Parallel: "+str(parallelised))
+        upper_bound = min(
+            end_timestamp + keep_alive,
+            next_start
+        )
+
+        for stamp in range(timestamp, upper_bound+1):
+            if stamp not in concurrent_dict:
+                concurrent_dict[stamp] = 0
+            concurrent_dict[stamp] += 1
     return concurrent_dict
 
 def save_result(concurrent_dict, output_name):
@@ -138,12 +89,13 @@ def save_result(concurrent_dict, output_name):
     f.close()
 
 def keep_alive_estimates(file_paths, output_name, keep_alive):
-    # start_dict = construct_start_dict(file_paths)
-    # log("Start dict generated for " + str(file_paths))
-    # concurrent_dict = construct_concurrent_dict(file_paths, start_dict, keep_alive)
-    last_call_dict = construct_last_call_dict(file_paths)
-    log("Last call dict constructed for " + str(file_paths))
-    concurrent_dict = construct_concurrent_dict(file_paths, last_call_dict, keep_alive)
+    records = parse_into_records(file_paths)
+    log("Records parsed")
+    records = sort_records(records)
+    log("Records sorted")
+    end_nextstart_dict = construct_end_nextstart_dict(records)
+    log("End-nextstart dict constructed")
+    concurrent_dict = construct_concurrent_dict(records, end_nextstart_dict, keep_alive)
     log("Concurrent dict generated for " + str(file_paths))
     save_result(concurrent_dict, output_name)
     log("Results saved for " + str(file_paths))

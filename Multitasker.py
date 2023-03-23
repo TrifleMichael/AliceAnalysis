@@ -36,8 +36,8 @@ serverName = "http://alimonitor.cern.ch/download/michal/"
 # fileNames = ['http_access_log.json-20221101']
 
 fileNames = [
-    "http_access_log.json-20230312",
-    "http_access_log.json-20230313",
+    # "http_access_log.json-20230312",
+    # "http_access_log.json-20230313",
     "http_access_log.json-20230314"
 ]
 
@@ -80,11 +80,11 @@ try:
             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
             if not os.path.isfile(output_path):
                 download(serverName, name, prefixes)
-                log("Starting keep alive estimate calculation: " + name)
+                log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
                 keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
                 remove(name, prefixes)
             else:
-                log("Skipping task for " + output_path)
+                log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
 
 except Exception as ex:
     log("Error took place: " + ex.__str__())
