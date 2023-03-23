@@ -67,7 +67,7 @@ def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
         useragent = record['useragent']
         end_timestamp = record['timestamp'] + record['elapsed_ms']
 
-        if end_timestamp in end_nextstart_dict[useragent]:
+        if (useragent in end_nextstart_dict) and (end_timestamp in end_nextstart_dict[useragent]):
             next_start = end_nextstart_dict[useragent][end_timestamp]
         else:
             next_start = float('inf')
