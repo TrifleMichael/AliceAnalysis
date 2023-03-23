@@ -1,34 +1,39 @@
 import matplotlib.pyplot as plt
+import os
 
-f = open("downloaded/20221101_double_checked", "r")
+input_path = "./keep_alive_estimates/"
+output_path = "./concurrent_connections_plots/"
 
-X = []
-Y = []
-for line in f:
-    val = int(line[:-1].split(":")[1])
-    ind = int(line[:-1].split(":")[0])
-    X.append(ind)
-    Y.append(val)
-f.close()
+filenames = os.listdir(input_path)
+for filename in filenames:
+    f = open(input_path+filename, "r")
+    X = []
+    Y = []
+    for line in f:
+        val = int(line[:-1].split(":")[1])
+        ind = int(line[:-1].split(":")[0])
+        X.append(ind)
+        Y.append(val)
+    f.close()
+    print("File loaded")
 
-print("File loaded")
-compress_last = 100000
-compression_counter = 0
-last_uncompressed = []
+    compress_last = 720000
+    compression_counter = 0
+    last_uncompressed = []
 
-compressed_X = []
-compressed_Y = []
+    compressed_X = []
+    compressed_Y = []
 
-print("Starting compression")
-for i in range(len(X)):
-    last_uncompressed.append(Y[i])
-    if compression_counter == compress_last:
-        compressed_X.append(i)
-        compressed_Y.append(max(last_uncompressed))
-        compression_counter = 0
-        last_uncompressed = []
-    compression_counter += 1
+    print("Starting compression")
+    for i in range(len(X)):
+        last_uncompressed.append(Y[i])
+        if compression_counter == compress_last:
+            compressed_X.append(i)
+            compressed_Y.append(max(last_uncompressed))
+            compression_counter = 0
+            last_uncompressed = []
+        compression_counter += 1
 
-print("Creating plot")
-plt.plot(compressed_X, compressed_Y)
-plt.savefig("compressed_concurrent_plot_"+str(compress_last))
+    print("Creating plot")
+    plt.plot(compressed_X, compressed_Y)
+    plt.savefig(output_path+"_max_"+str(compress_last)+".png")
