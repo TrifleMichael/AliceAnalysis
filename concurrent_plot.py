@@ -38,5 +38,6 @@ for filename in filenames:
 
     print("Creating plot")
     plt.plot(compressed_X, compressed_Y)
-    plt.savefig(output_path+filename+"_max_"+str(compress_last)+".png")
-    print("Plot created")
+    output_formatted = output_path+filename+"_max_"+str(compress_last)+".png"
+    plt.savefig(output_formatted)
+    print("Plot created:", output_formatted)

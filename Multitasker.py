@@ -32,14 +32,14 @@ def remove(fileName, prefixes):
 
 
 prefixes = ["alicdb1/", "alicdb2/"]
-serverName = "http://alimonitor.cern.ch/download/michal/"
-# fileNames = ['http_access_log.json-20221101']
+serverName = "http://alimonitor.cern.ch/download/michal/old/"
+fileNames = ['http_access_log.json-20221101']
 
-fileNames = [
+# fileNames = [
     # "http_access_log.json-20230312",
     # "http_access_log.json-20230313",
-    "http_access_log.json-20230314"
-]
+#     "http_access_log.json-20230314"
+# ]
 
 
 
