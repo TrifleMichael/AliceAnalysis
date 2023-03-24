@@ -83,6 +83,11 @@ def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
             concurrent_dict[stamp] += 1
     return concurrent_dict
 
+def fill_dict_gaps(dict):
+    for i in range(min(dict), max(dict)):
+        if i not in dict:
+            dict[i] = 0
+
 def save_result(concurrent_dict, output_name):
     f = open(output_name, "w")
     for key in concurrent_dict:
@@ -98,6 +103,8 @@ def keep_alive_estimates(file_paths, output_name, keep_alive):
     log("End-nextstart dict constructed")
     concurrent_dict = construct_concurrent_dict(records, end_nextstart_dict, keep_alive)
     log("Concurrent dict generated for " + str(file_paths))
+    fill_dict_gaps(concurrent_dict)
+    log("Filled concurrent dict gaps")
     save_result(concurrent_dict, output_name)
-    log("Results saved for " + str(file_paths))
+    log("Results saved for " + output_name)
     # TODO: Fill concurrent_dict with zeros during times of no connections

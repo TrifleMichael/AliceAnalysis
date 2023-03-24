@@ -21,8 +21,7 @@ for filename in filenames:
     f.close()
     print("File loaded")
 
-    # compress_last = 720000
-    compress_last = 10**5
+    compress_last = 240000
     compression_counter = 0
     last_uncompressed = []
 
@@ -52,6 +51,13 @@ for filename in filenames:
     labels = [str(t*hours_per_ticks)+"h" for t in range(24//hours_per_ticks)]
     ax.set_xticklabels(labels)
     ax.plot(compressed_Y)
+
+    ax.grid(True)
+    ax.set_xlabel('Time (hours)')
+    ax.set_ylabel('Concurrent calls (max from last ' + str(compress_last//60000) + ' min)')
+    keep_alive = filename.split("_")[0]
+    ax.set_title('Keep-alive: '+str(keep_alive))  # TODO: ADD DATE TO TITLE
+
     output_formatted = output_path+filename+"_max_"+str(compress_last)+".png"
-    plt.savefig(output_formatted)
+    plt.savefig(output_formatted, dpi=300)
     print("Plot created:", output_formatted)
