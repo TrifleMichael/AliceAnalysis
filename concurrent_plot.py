@@ -42,7 +42,7 @@ for filename in filenames:
 
         print("Creating plot")
         fig, ax = plt.subplots()
-        ticks = [i*len(X)//compress_last//24*hours_per_ticks for i in range(24//hours_per_ticks)]
+        ticks = [i*len(X)/compress_last/24*hours_per_ticks for i in range(24//hours_per_ticks)]
         ax.set_xticks(ticks)
         labels = [str(t*hours_per_ticks)+"h" for t in range(24//hours_per_ticks)]
         ax.set_xticklabels(labels)
