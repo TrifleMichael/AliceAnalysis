@@ -77,7 +77,7 @@ def connection_time_analysis(fileNames):
 
 
 try:
-    keep_alive_times = [0, 100]
+    keep_alive_times = [50, 150]
     for name in fileNames:
         for keep_alive in keep_alive_times:
             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
