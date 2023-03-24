@@ -9,7 +9,7 @@ filenames = os.listdir(input_path)
 
 
 for filename in filenames:
-    compress_last = 240000
+    compress_last = 600000
     output_formatted = output_path+filename+"_max_"+str(compress_last)+".png"
     if not os.path.isfile(output_formatted):
         print("Starting plot generation for "+filename)
