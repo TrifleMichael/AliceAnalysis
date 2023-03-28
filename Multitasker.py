@@ -2,6 +2,7 @@ import os
 import traceback
 
 from Analyze import generateDiffFiles
+from calculate_start_of_connections import calculate_start_of_connections
 from keep_alive_estimates import keep_alive_estimates
 from open_window_analysis import generateConnectionsGraph
 from datetime import datetime
@@ -68,27 +69,30 @@ def connection_time_analysis(fileNames):
 #             else:
 #                 log("Skipping task for " + outputName)
 #
-# except Exception as ex:
-#     log("Error took place: " + ex.__str__())
-#     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-#     message = template.format(type(ex).__name__, ex.args)
-#     log(message)
-#     print(traceback.format_exc())
 
+# try:
+#     keep_alive_times = [50, 150]
+#     for name in fileNames:
+#         for keep_alive in keep_alive_times:
+#             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
+#             if not os.path.isfile(output_path):
+#                 download(serverName, name, prefixes)
+#                 log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
+#                 keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+#                 # remove(name, prefixes)
+#             else:
+#                 log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
 
 try:
-    keep_alive_times = [50, 150]
     for name in fileNames:
-        for keep_alive in keep_alive_times:
-            output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
-            if not os.path.isfile(output_path):
-                download(serverName, name, prefixes)
-                log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
-                keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+        output_path = "./connection_starts/" + "starts_" + name
+        if not os.path.isfile(output_path):
+            download(serverName, name, prefixes)
+            # keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+            calculate_start_of_connections([prefixes[0] + name, prefixes[1] + name], output_path)
                 # remove(name, prefixes)
-            else:
-                log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
-
+        else:
+            log("Skipping connection_starts for " + output_path)
 except Exception as ex:
     log("Error took place: " + ex.__str__())
     template = "An exception of type {0} occurred. Arguments:\n{1!r}"
