@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 import os
 
-input_path = "./keep_alive_estimates/"
-output_path = "./concurrent_connections_plots/"
+# input_path = "./keep_alive_estimates/"
+# output_path = "./concurrent_connections_plots/"
+input_path = "./connection_starts/"
+output_path = "./connection_starts_plots/"
 hours_per_ticks = 2
 
 filenames = os.listdir(input_path)
