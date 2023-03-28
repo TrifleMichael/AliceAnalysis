@@ -88,9 +88,8 @@ try:
         output_path = "./connection_starts/" + "starts_" + name
         if not os.path.isfile(output_path):
             download(serverName, name, prefixes)
-            # keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
             calculate_start_of_connections([prefixes[0] + name, prefixes[1] + name], output_path)
-                # remove(name, prefixes)
+            # remove(name, prefixes)
         else:
             log("Skipping connection_starts for " + output_path)
 except Exception as ex:
