@@ -37,7 +37,7 @@ def fill_connection_start_dict_gaps(connections_start_dict):
 
 def save_output(connections_start_dict, output_name):
     f = open(output_name, "w")
-    for timestamp in connections_start_dict:
+    for timestamp in range(min(connections_start_dict), max(connections_start_dict)):
         f.write(str(timestamp) + ":" + str(connections_start_dict[timestamp]) + "\n")
     f.close()
 

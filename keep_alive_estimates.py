@@ -90,8 +90,8 @@ def fill_dict_gaps(dict):
 
 def save_result(concurrent_dict, output_name):
     f = open(output_name, "w")
-    for key in concurrent_dict:
-        f.write(str(key) + ":" + str(concurrent_dict[key]) + "\n")
+    for timestamp in range(min(concurrent_dict), max(concurrent_dict)):
+        f.write(str(timestamp) + ":" + str(concurrent_dict[timestamp]) + "\n")
     f.close()
 
 def keep_alive_estimates(file_paths, output_name, keep_alive):
