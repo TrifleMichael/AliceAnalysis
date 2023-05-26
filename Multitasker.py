@@ -28,7 +28,7 @@ def download(serverName, fileName, prefixes):
                     "mv " + fileName + ".bz2 " + prefix + fileName + ".bz2")  # Move the archive to the destination
             else:
                 log("Skipping download for "+fileName)
-            log("Unpacking", prefix + fileName)
+            log("Unpacking " + prefix + fileName)
             os.system(
                 "bzip2 -cd " + prefix + fileName + ".bz2 > " + prefix + fileName)  # Unpack the archive in destination
         else:
