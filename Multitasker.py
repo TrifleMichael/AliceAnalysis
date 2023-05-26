@@ -20,8 +20,8 @@ def log(information):
 
 def download(serverName, fileName, prefixes):
     for prefix in prefixes:
-        if not os.path.isfile(prefix + fileName + ".bz2"):  # If archive is not present
-            if not os.path.isfile(prefix + fileName):  # If file is not present
+        if not os.path.isfile(prefix + fileName):  # If file is not present
+            if not os.path.isfile(prefix + fileName + ".bz2"):  # If archive is not present 
                 log("Downloading " + serverName + prefix + fileName + ".bz2")
                 os.system("wget " + serverName + prefix + fileName + ".bz2")  # Download archive
                 os.system(
@@ -80,8 +80,8 @@ fileNames = ['http_access_log.json-20230524', 'http_access_log.json-20230525']
 
 try:
     for name in fileNames:
-        outputName = "0_" + name
-        if not os.path.isfile("./no_keepalives/" + outputName + "_results"):
+        outputName = "no_keepalives/" + "0_" + name
+        if not os.path.isfile(outputName + "_results"):
             log("Considering download for: " + name)
             download(serverName, name, prefixes)
             log("Preparing graph for: " + name)
