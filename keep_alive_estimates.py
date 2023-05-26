@@ -107,4 +107,3 @@ def keep_alive_estimates(file_paths, output_name, keep_alive):
     log("Filled concurrent dict gaps")
     save_result(concurrent_dict, output_name)
     log("Results saved for " + output_name)
-    # TODO: Fill concurrent_dict with zeros during times of no connections
