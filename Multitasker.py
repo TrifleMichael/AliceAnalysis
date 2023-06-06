@@ -43,7 +43,7 @@ def remove(fileName, prefixes):
 
 prefixes = ["alicdb1/", "alicdb2/"]
 serverName = "http://alimonitor.cern.ch/download/michal/"
-fileNames = ['http_access_log.json-20230524', 'http_access_log.json-20230525']
+fileNames = ['http_access_log.json-20230524'] # , 'http_access_log.json-20230525'
 
 # fileNames = [
 #     "http_access_log.json-20230312",
@@ -65,7 +65,7 @@ fileNames = ['http_access_log.json-20230524', 'http_access_log.json-20230525']
 
 
 # try:
-#     window_sizes = [0]
+#     window_sizes = [0, 50]
 #     for name in fileNames:
 #         for size in window_sizes:
 #             outputName = str(size) + "_" + name + ".png"
@@ -78,30 +78,32 @@ fileNames = ['http_access_log.json-20230524', 'http_access_log.json-20230525']
 #             else:
 #                 log("Skipping task for " + outputName)
 
-try:
-    for name in fileNames:
-        outputName = "no_keepalives/" + "0_" + name
-        if not os.path.isfile(outputName + "_results"):
-            log("Considering download for: " + name)
-            download(serverName, name, prefixes)
-            log("Preparing graph for: " + name)
-            no_keepalive([prefixes[0] + name, prefixes[1] + name], outputName)
-            # remove(name, prefixes)
-        else:
-            log("Skipping task for " + outputName)
-
+## NO KEEPALIVES
 # try:
-#     keep_alive_times = [0]
 #     for name in fileNames:
-#         for keep_alive in keep_alive_times:
-#             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
-#             if not os.path.isfile(output_path):
-#                 download(serverName, name, prefixes)
-#                 log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
-#                 keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
-#                 # remove(name, prefixes)
-#             else:
-#                 log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
+#         outputName = "no_keepalives/" + "0_" + name
+#         if not os.path.isfile(outputName + "_results"):
+#             log("Considering download for: " + name)
+#             download(serverName, name, prefixes)
+#             log("Preparing graph for: " + name)
+#             no_keepalive([prefixes[0] + name, prefixes[1] + name], outputName)
+#             # remove(name, prefixes)
+#         else:
+#             log("Skipping task for " + outputName)
+
+# KEEPALIVE ESTIMATES
+try:
+    keep_alive_times = [0]
+    for name in fileNames:
+        for keep_alive in keep_alive_times:
+            output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
+            if not os.path.isfile(output_path):
+                download(serverName, name, prefixes)
+                log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
+                keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+                # remove(name, prefixes)
+            else:
+                log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
 
 # try:
 #     for name in fileNames:

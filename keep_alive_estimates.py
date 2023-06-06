@@ -16,18 +16,20 @@ def parse_into_records(files):
     for file in files:
         with open(file) as f:
             for i, line in enumerate(f):
+                if i % 1000000 == 0:
+                    print(i // 1000000, "mln")
                 json_line = json.loads(line)
                 if 'userAgent' in json_line and 'timestamp' in json_line and 'elapsed_ms' in json_line:
 
-                    record = {'useragent': json_line['userAgent'],
-                              'timestamp': int(json_line['timestamp']),
-                              'elapsed_ms': int(json_line['elapsed_ms'])}
+                    record = (json_line['userAgent'],
+                              int(json_line['timestamp']),
+                              int(json_line['elapsed_ms']))
 
                     records.append(record)
     return records
 
 def sort_records(records):
-    return sorted(records, key=lambda record: record['timestamp'])
+    return sorted(records, key=lambda record: record[1])
 
 # Returns last end timestamp from that user that happened before timestamp.
 def get_last_end(useragent, timestamp, end_dict):
@@ -36,16 +38,17 @@ def get_last_end(useragent, timestamp, end_dict):
             return end_dict[useragent].pop(i)
     return None
 
-
+# Returns dictionary that holds information about which records can be merged
 def construct_end_nextstart_dict(records):
     end_nextstart_dict = {}  # key - user, value - dictionary of (key - end timestamp, value - next start)
-    end_dict = {}  # key - user, value - list of ends of their connections (sorted by start time of those connections)
+    end_dict = {}  # key - user, value - list of ends of their connections (sorted by start time of those connections) # TODO: This algorithm will be inaccurate if a user can have two connections at the same time. Check that.
     for record in records:
 
         # Add record data to end_dict
-        useragent = record['useragent']
-        timestamp = record['timestamp']
-        end_timestamp = record['timestamp'] + record['elapsed_ms']
+        useragent = record[0]
+        timestamp = record[1]
+        elapsed_ms = record[2]
+        end_timestamp = timestamp + elapsed_ms
         if useragent not in end_dict:
             end_dict[useragent] = []
         end_dict[useragent].append(end_timestamp)
@@ -62,16 +65,20 @@ def construct_end_nextstart_dict(records):
 def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
     concurrent_dict = {}  # Key - timestamp, value - number of concurrent calls
 
-    for record in records:
-        timestamp = record['timestamp']
-        useragent = record['useragent']
-        end_timestamp = record['timestamp'] + record['elapsed_ms']
+    while len(records) != 0:
+        record = records.pop()
+    # for record in records:
+        useragent = record[0]
+        timestamp = record[1]
+        elapsed_ms = record[2]
+        end_timestamp = timestamp + elapsed_ms
 
         if (useragent in end_nextstart_dict) and (end_timestamp in end_nextstart_dict[useragent]):
             next_start = end_nextstart_dict[useragent][end_timestamp]
         else:
             next_start = float('inf')
 
+        # Next start can be within the keepalive window or beyond that window.
         upper_bound = min(
             end_timestamp + keep_alive,
             next_start
