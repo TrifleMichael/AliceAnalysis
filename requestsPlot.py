@@ -67,7 +67,7 @@ for name in names:
     fig, ax = plt.subplots()
     ticks = [i for i in range(0, len(starts), tick_num)]
     ax.set_xticks(ticks)
-    labels = [str(datetime.fromtimestamp(starts[i]//1000)) for i in range(0, len(starts), tick_num)]
+    labels = [str(datetime.fromtimestamp(starts[i]//1000).time()) for i in range(0, len(starts), tick_num)]
     ax.set_xticklabels(labels)
     ax.plot(values)
 
