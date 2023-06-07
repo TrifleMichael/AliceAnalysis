@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 from collections import deque
 
+# Tworzy plik z danymi o wykresie polaczen po czasie
+
 def log(information):
     f = open("LOGS", "a")
     f.write(str(datetime.now()))

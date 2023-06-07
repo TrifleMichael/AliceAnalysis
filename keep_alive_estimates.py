@@ -68,7 +68,6 @@ def construct_concurrent_dict(records, end_nextstart_dict, keep_alive):
 
     while len(records) != 0:
         record = records.pop()
-    # for record in records:
         useragent = record[0]
         timestamp = record[1]
         elapsed_ms = record[2]

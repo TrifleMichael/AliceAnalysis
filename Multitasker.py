@@ -1,13 +1,13 @@
 import os
 import traceback
 
-from Analyze import generateDiffFiles
-from calculate_start_of_connections import calculate_start_of_connections
 from keep_alive_estimates import keep_alive_estimates
 from datetime import datetime
 
 from no_keepalives import no_keepalive
 
+# nohup python Multitasker.py &
+# ps aux --headers | head -n 1 ; ps aux --headers | grep "mtrzeb"     <- wypisuje wszystkie procesy ktore naleza do mtrzeb (z kazdej sesji)
 
 def log(information):
     f = open("LOGS", "a")
@@ -16,7 +16,7 @@ def log(information):
     f.write(information)
     f.write("\n")
     f.close()
-    print(information)
+    print(information) 
 
 def download(serverName, fileName, prefixes):
     for prefix in prefixes:
@@ -55,55 +55,32 @@ fileNames = ['http_access_log.json-20230524'] # , 'http_access_log.json-20230525
 # ]
 
 
-
-# def connection_time_analysis(fileNames):
-#     for name in fileNames:
-#         if not os.path.isfile("diff_files/diffs_" + name):
-#             download(serverName, name, prefixes)
-#             generateDiffFiles(name, prefixes)
-#             remove(name, prefixes)
-
-
-# try:
-#     window_sizes = [0, 50]
-#     for name in fileNames:
-#         for size in window_sizes:
-#             outputName = str(size) + "_" + name + ".png"
-#             if not os.path.isfile("./output/" + outputName + "_results"):
-#                 log("Considering download for: " + name)
-#                 download(serverName, name, prefixes)
-#                 log("Preparing graph for: " + name)
-#                 generateConnectionsGraph([prefixes[0] + name, prefixes[1] + name], outputName, size)
-#                 remove(name, prefixes)
-#             else:
-#                 log("Skipping task for " + outputName)
-
 ## NO KEEPALIVES
-# try:
-#     for name in fileNames:
-#         outputName = "no_keepalives/" + "0_" + name
-#         if not os.path.isfile(outputName + "_results"):
-#             log("Considering download for: " + name)
-#             download(serverName, name, prefixes)
-#             log("Preparing graph for: " + name)
-#             no_keepalive([prefixes[0] + name, prefixes[1] + name], outputName)
-#             # remove(name, prefixes)
-#         else:
-#             log("Skipping task for " + outputName)
+try:
+    for name in fileNames:
+        outputName = "no_keepalives/" + "0_" + name
+        if not os.path.isfile(outputName + "_results"):
+            log("Considering download for: " + name)
+            download(serverName, name, prefixes)
+            log("Preparing graph for: " + name)
+            no_keepalive([prefixes[0] + name, prefixes[1] + name], outputName)
+            # remove(name, prefixes)
+        else:
+            log("Skipping task for " + outputName)
 
 # KEEPALIVE ESTIMATES
-try:
-    keep_alive_times = [0]
-    for name in fileNames:
-        for keep_alive in keep_alive_times:
-            output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
-            if not os.path.isfile(output_path):
-                download(serverName, name, prefixes)
-                log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
-                keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
-                # remove(name, prefixes)
-            else:
-                log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
+# try:
+#     keep_alive_times = [0]
+#     for name in fileNames:
+#         for keep_alive in keep_alive_times:
+#             output_path = "./keep_alive_estimates/" + str(keep_alive) + "_" + name
+#             if not os.path.isfile(output_path):
+#                 download(serverName, name, prefixes)
+#                 log("Starting keep alive estimate calculation: " + name + " with keep_alive " + str(keep_alive))
+#                 keep_alive_estimates([prefixes[0] + name, prefixes[1] + name], output_path, keep_alive)
+#                 # remove(name, prefixes)
+#             else:
+#                 log("Skipping task for " + output_path + " with keep_alive " + str(keep_alive))
 
 # try:
 #     for name in fileNames:
