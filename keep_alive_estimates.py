@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+# Tworzy plik opisujacy wykres liczby polaczen na przestrzeni czasu, zakladajac zadany czas keepalive
 
 def log(information):
     f = open("LOGS", "a")

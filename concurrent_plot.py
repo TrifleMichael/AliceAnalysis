@@ -1,10 +1,14 @@
 import matplotlib.pyplot as plt
 import os
 
+# Tworzy wykresy liczby polaczen na przestrzeni czasu na podstawie danych z keep_alive_estimates albo no_keep_alives
+
 # input_path = "./keep_alive_estimates/"
-# output_path = "./concurrent_connections_plots/"
-input_path = "./keep_alive_estimates/"
-output_path = "./keep_alive_estimates_plots/"
+# output_path = "./keep_alive_estimates_plots/"
+
+input_path = "./no_keepalives/"
+output_path = "./no_keepalives_plots/"
+
 hours_per_ticks = 2
 
 filenames = os.listdir(input_path)
@@ -35,12 +39,12 @@ for filename in filenames:
         print("Starting compression")
         for i in range(len(X)):
             last_uncompressed.append(Y[i])
+            compression_counter += 1
             if compression_counter == compress_last:
                 compressed_X.append(i)
-                compressed_Y.append(max(last_uncompressed))
+                compressed_Y.append(int(sum(last_uncompressed)/len(last_uncompressed))) # TODO: SHOULD BE MAX
                 last_uncompressed = []
                 compression_counter = 0
-            compression_counter += 1
 
         print("Creating plot")
         fig, ax = plt.subplots()

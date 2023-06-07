@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 
+# STARY PLIK, NIE WIEM CZY DOBRZE DZIALA
+# Tworzy histogram na podstawie danych z HistogramCalulator
+
 fileNames = [
     "http_access_log.json-20221116",
     "http_access_log.json-20221121",
